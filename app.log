@@ -1,0 +1,175 @@
+2025-10-29 18:00:48,005 - app.main - INFO - ==================================================
+2025-10-29 18:00:48,006 - app.main - INFO - Starting TCS Forecast Agent
+2025-10-29 18:00:48,006 - app.main - INFO - ==================================================
+2025-10-29 18:00:53,654 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-10-29 18:00:53,654 - mysql.connector - INFO - plugin_name: caching_sha2_password
+2025-10-29 18:00:53,654 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-10-29 18:01:37,503 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:01:37,504 - app.api.endpoints - INFO - NEW REQUEST: d372490a-c377-404a-96f7-916f3ab78690
+2025-10-29 18:01:37,504 - app.api.endpoints - INFO - Params: quarters=3, sources=['screener', 'company-ir']
+2025-10-29 18:01:37,505 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:01:37,506 - app.api.endpoints - INFO - Initializing ForecastAgent...
+2025-10-29 18:01:37,521 - app.api.endpoints - INFO - Initializing MySQLClient...
+2025-10-29 18:01:37,839 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:01:54,683 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:02:01,917 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.2s before trying next model/round.
+2025-10-29 18:02:08,449 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:02:39,912 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.8s before trying next model/round.
+2025-10-29 18:02:46,367 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.0s before trying next model/round.
+2025-10-29 18:02:52,675 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:03:22,446 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.0s before trying next model/round.
+2025-10-29 18:03:28,472 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.0s before trying next model/round.
+2025-10-29 18:03:34,555 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.8s before trying next model/round.
+2025-10-29 18:03:37,854 - app.api.endpoints - ERROR - Agent execution timed out after 120s
+2025-10-29 18:09:24,785 - app.main - INFO - ==================================================
+2025-10-29 18:09:24,786 - app.main - INFO - Starting TCS Forecast Agent
+2025-10-29 18:09:24,787 - app.main - INFO - ==================================================
+2025-10-29 18:09:31,455 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-10-29 18:09:31,456 - mysql.connector - INFO - plugin_name: caching_sha2_password
+2025-10-29 18:09:31,457 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-10-29 18:09:37,410 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:09:37,410 - app.api.endpoints - INFO - NEW REQUEST: d2f27567-4d2c-46df-9e82-a53bc570fd78
+2025-10-29 18:09:37,411 - app.api.endpoints - INFO - Params: quarters=3, sources=['screener', 'company-ir']
+2025-10-29 18:09:37,411 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:09:37,411 - app.api.endpoints - INFO - Initializing ForecastAgent...
+2025-10-29 18:09:37,426 - app.api.endpoints - INFO - Initializing MySQLClient...
+2025-10-29 18:09:37,682 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:09:37,960 - app.services.document_fetcher - INFO - Fetching documents for TCS, quarters=3
+2025-10-29 18:09:37,960 - app.services.document_fetcher - INFO - Scraping: https://www.screener.in/company/TCS/consolidated/
+2025-10-29 18:09:38,250 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/72996532540_17_06_22.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/72996532540_17_06_22.pdf
+2025-10-29 18:09:38,581 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/68468532540_25_05_21.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/68468532540_25_05_21.pdf
+2025-10-29 18:09:38,906 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/5325400320.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/5325400320.pdf
+2025-10-29 18:09:39,230 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/5325400319.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/5325400319.pdf
+2025-10-29 18:09:39,554 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/5325400318.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/5325400318.pdf
+2025-10-29 18:09:39,935 - app.services.document_fetcher - WARNING - No documents from web, using test fixtures
+2025-10-29 18:09:39,936 - app.services.document_fetcher - ERROR - No documents available - creating placeholder
+2025-10-29 18:09:41,558 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:09:47,331 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:09:54,587 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:10:15,745 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:10:22,722 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.3s before trying next model/round.
+2025-10-29 18:10:29,336 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:11:27,724 - app.api.endpoints - WARNING - Agent returned error: incomplete_analysis
+2025-10-29 18:14:26,990 - app.main - INFO - ==================================================
+2025-10-29 18:14:26,990 - app.main - INFO - Starting TCS Forecast Agent
+2025-10-29 18:14:26,991 - app.main - INFO - ==================================================
+2025-10-29 18:14:34,048 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-10-29 18:14:34,048 - mysql.connector - INFO - plugin_name: caching_sha2_password
+2025-10-29 18:14:34,049 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-10-29 18:14:46,908 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:14:46,908 - app.api.endpoints - INFO - NEW REQUEST: 1022b5da-ae27-45f3-ad6c-4b0ba54bb0f9
+2025-10-29 18:14:46,908 - app.api.endpoints - INFO - Params: quarters=3, sources=['screener', 'company-ir']
+2025-10-29 18:14:46,909 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:14:46,909 - app.api.endpoints - INFO - Initializing ForecastAgent...
+2025-10-29 18:14:46,921 - app.api.endpoints - INFO - Initializing MySQLClient...
+2025-10-29 18:14:47,176 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:14:47,395 - app.services.document_fetcher - INFO - Fetching documents for TCS, quarters=3
+2025-10-29 18:14:47,395 - app.services.document_fetcher - INFO - Using cached documents
+2025-10-29 18:14:49,577 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:14:56,525 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.5s before trying next model/round.
+2025-10-29 18:15:03,400 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:17:16,223 - app.api.endpoints - WARNING - Agent returned error: agent_execution_failed
+2025-10-29 18:28:49,187 - app.main - INFO - ==================================================
+2025-10-29 18:28:49,187 - app.main - INFO - Starting TCS Forecast Agent
+2025-10-29 18:28:49,188 - app.main - INFO - ==================================================
+2025-10-29 18:28:54,286 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-10-29 18:28:54,286 - mysql.connector - INFO - plugin_name: caching_sha2_password
+2025-10-29 18:28:54,287 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-10-29 18:30:12,023 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:30:12,023 - app.api.endpoints - INFO - NEW REQUEST: 602c6cb1-9e0f-479c-8874-d70c91057929
+2025-10-29 18:30:12,023 - app.api.endpoints - INFO - Params: quarters=2, sources=['company-ir']
+2025-10-29 18:30:12,024 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:30:12,024 - app.api.endpoints - INFO - Initializing ForecastAgent...
+2025-10-29 18:30:12,040 - app.api.endpoints - INFO - Initializing MySQLClient...
+2025-10-29 18:30:12,283 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:30:12,490 - app.services.document_fetcher - INFO - Fetching documents for TCS, quarters=2
+2025-10-29 18:30:12,490 - app.services.document_fetcher - INFO - Scraping: https://www.screener.in/company/TCS/consolidated/
+2025-10-29 18:30:12,765 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/72996532540_17_06_22.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/72996532540_17_06_22.pdf
+2025-10-29 18:30:13,087 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/68468532540_25_05_21.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/68468532540_25_05_21.pdf
+2025-10-29 18:30:13,409 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/5325400320.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/5325400320.pdf
+2025-10-29 18:30:13,765 - app.services.document_fetcher - WARNING - Download failed for https://www.bseindia.com/bseplus/AnnualReport/532540/5325400319.pdf: 403 Client Error: Forbidden for url: https://www.bseindia.com/bseplus/AnnualReport/532540/5325400319.pdf
+2025-10-29 18:30:14,074 - app.services.document_fetcher - WARNING - No documents from web, using test fixtures
+2025-10-29 18:30:14,075 - app.services.document_fetcher - ERROR - No documents available - creating placeholder
+2025-10-29 18:30:16,344 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:30:23,489 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.2s before trying next model/round.
+2025-10-29 18:30:30,046 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.2s before trying next model/round.
+2025-10-29 18:31:03,217 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:31:10,228 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.5s before trying next model/round.
+2025-10-29 18:31:16,750 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.8s before trying next model/round.
+2025-10-29 18:32:01,543 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:32:08,498 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.8s before trying next model/round.
+2025-10-29 18:32:15,618 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.0s before trying next model/round.
+2025-10-29 18:32:39,258 - app.api.endpoints - WARNING - Agent returned error: agent_execution_failed
+2025-10-29 18:38:30,479 - app.main - INFO - ==================================================
+2025-10-29 18:38:30,479 - app.main - INFO - Starting TCS Forecast Agent
+2025-10-29 18:38:30,480 - app.main - INFO - ==================================================
+2025-10-29 18:38:37,511 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-10-29 18:38:37,512 - mysql.connector - INFO - plugin_name: caching_sha2_password
+2025-10-29 18:38:37,513 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-10-29 18:38:45,990 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:38:45,991 - app.api.endpoints - INFO - NEW REQUEST: 98d25dd4-00cd-4428-879d-5d545b6e9f79
+2025-10-29 18:38:45,991 - app.api.endpoints - INFO - Params: quarters=2, sources=['company-ir']
+2025-10-29 18:38:45,991 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:38:45,991 - app.api.endpoints - INFO - Initializing ForecastAgent...
+2025-10-29 18:38:46,011 - app.api.endpoints - INFO - Initializing MySQLClient...
+2025-10-29 18:38:46,276 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:38:46,529 - app.services.document_fetcher - INFO - Fetching documents for TCS, quarters=2
+2025-10-29 18:38:46,530 - app.services.document_fetcher - INFO - Using cached documents
+2025-10-29 18:38:48,658 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 6.0s before trying next model/round.
+2025-10-29 18:38:55,776 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:39:01,501 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.5s before trying next model/round.
+2025-10-29 18:39:30,300 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.6s before trying next model/round.
+2025-10-29 18:39:37,104 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.5s before trying next model/round.
+2025-10-29 18:39:43,760 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:40:11,758 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.4s before trying next model/round.
+2025-10-29 18:40:18,263 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:40:24,013 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:41:05,051 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:41:11,431 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.8s before trying next model/round.
+2025-10-29 18:41:18,402 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.7s before trying next model/round.
+2025-10-29 18:43:44,990 - root - WARNING - Network error calling OpenRouter (model=nvidia/nemotron-nano-12b-v2-vl:free): ("Connection broken: ConnectionAbortedError(10053, 'An established connection was aborted by the software in your host machine', None, 10053, None)", ConnectionAbortedError(10053, 'An established connection was aborted by the software in your host machine', None, 10053, None)). Retrying after 5.9s
+2025-10-29 18:43:46,309 - app.api.endpoints - ERROR - Agent execution timed out after 120s
+2025-10-29 18:43:51,053 - root - WARNING - Network error calling OpenRouter (model=openai/gpt-oss-20b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F6F3A5450>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.5s
+2025-10-29 18:44:07,672 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F775EC550>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.0s
+2025-10-29 18:44:28,737 - root - WARNING - Network error calling OpenRouter (model=qwen/qwen-2.5-72b-instruct:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F775EC050>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.6s
+2025-10-29 18:44:50,447 - root - WARNING - Network error calling OpenRouter (model=alibaba/tongyi-deepresearch-30b-a3b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77895950>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.8s
+2025-10-29 18:45:01,255 - root - WARNING - Network error calling OpenRouter (model=nvidia/nemotron-nano-12b-v2-vl:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77895E50>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.7s
+2025-10-29 18:45:11,963 - root - WARNING - Network error calling OpenRouter (model=openai/gpt-oss-20b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F775EC2D0>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.8s
+2025-10-29 18:45:22,752 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F775EC550>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.5s
+2025-10-29 18:45:36,297 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:45:36,298 - app.api.endpoints - INFO - NEW REQUEST: 73b48765-e1d7-4fb7-ae0b-4f24ffe2000a
+2025-10-29 18:45:36,299 - app.api.endpoints - INFO - Params: quarters=3, sources=['company-ir']
+2025-10-29 18:45:36,299 - app.api.endpoints - INFO - ============================================================
+2025-10-29 18:45:36,453 - app.api.endpoints - INFO - Starting agent execution...
+2025-10-29 18:45:36,465 - app.services.document_fetcher - INFO - Fetching documents for TCS, quarters=3
+2025-10-29 18:45:36,468 - app.services.document_fetcher - INFO - Using cached documents
+2025-10-29 18:45:36,579 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77894CD0>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.3s
+2025-10-29 18:45:41,908 - root - WARNING - Network error calling OpenRouter (model=qwen/qwen-2.5-72b-instruct:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896490>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.4s
+2025-10-29 18:45:43,303 - root - WARNING - Network error calling OpenRouter (model=qwen/qwen-2.5-72b-instruct:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896210>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 21.0s
+2025-10-29 18:45:47,342 - root - WARNING - Network error calling OpenRouter (model=alibaba/tongyi-deepresearch-30b-a3b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77749090>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.4s
+2025-10-29 18:45:52,707 - root - WARNING - Network error calling OpenRouter (model=nvidia/nemotron-nano-12b-v2-vl:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896710>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.6s
+2025-10-29 18:45:58,344 - root - WARNING - Network error calling OpenRouter (model=openai/gpt-oss-20b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896E90>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 5.5s
+2025-10-29 18:46:03,883 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77897250>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.3s
+2025-10-29 18:46:04,298 - root - WARNING - Network error calling OpenRouter (model=alibaba/tongyi-deepresearch-30b-a3b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77897610>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.8s
+2025-10-29 18:46:25,225 - root - WARNING - Network error calling OpenRouter (model=qwen/qwen-2.5-72b-instruct:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77749090>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.2s
+2025-10-29 18:46:25,225 - root - WARNING - Network error calling OpenRouter (model=nvidia/nemotron-nano-12b-v2-vl:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F7774BED0>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.6s
+2025-10-29 18:46:35,467 - root - WARNING - Network error calling OpenRouter (model=alibaba/tongyi-deepresearch-30b-a3b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77897D90>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.8s
+2025-10-29 18:46:56,869 - root - WARNING - Network error calling OpenRouter (model=openai/gpt-oss-20b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F6F3A5450>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.9s
+2025-10-29 18:46:56,869 - root - WARNING - Network error calling OpenRouter (model=nvidia/nemotron-nano-12b-v2-vl:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F778974D0>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.6s
+2025-10-29 18:47:17,807 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896C10>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 40.8s
+2025-10-29 18:47:18,564 - root - WARNING - Network error calling OpenRouter (model=openai/gpt-oss-20b:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77897750>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 10.3s
+2025-10-29 18:47:28,901 - root - WARNING - Network error calling OpenRouter (model=google/gemini-2.0-flash-exp:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896FD0>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.4s
+2025-10-29 18:47:49,302 - root - WARNING - Network error calling OpenRouter (model=qwen/qwen-2.5-72b-instruct:free): HTTPSConnectionPool(host='openrouter.ai', port=443): Max retries exceeded with url: /api/v1/chat/completions (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000027F77896490>: Failed to resolve 'openrouter.ai' ([Errno 11001] getaddrinfo failed)")). Retrying after 20.0s
+2025-10-29 18:48:02,421 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 40.4s before trying next model/round.
+2025-10-29 18:48:10,989 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 20.9s before trying next model/round.
+2025-10-29 18:48:44,717 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 41.0s before trying next model/round.
+2025-10-29 18:48:54,591 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.4s before trying next model/round.
+2025-10-29 18:49:01,516 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.9s before trying next model/round.
+2025-10-29 18:49:08,715 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.1s before trying next model/round.
+2025-10-29 18:49:54,976 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.6s before trying next model/round.
+2025-10-29 18:50:01,985 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.6s before trying next model/round.
+2025-10-29 18:50:09,213 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.2s before trying next model/round.
+2025-10-29 18:50:36,464 - app.api.endpoints - ERROR - Agent execution timed out after 120s
+2025-10-29 18:50:37,758 - root - WARNING - Rate limit for model google/gemini-2.0-flash-exp:free. Waiting 5.2s before trying next model/round.
+2025-10-29 18:50:44,636 - root - WARNING - Rate limit for model qwen/qwen-2.5-72b-instruct:free. Waiting 5.3s before trying next model/round.
+2025-10-29 18:50:52,322 - root - WARNING - Rate limit for model alibaba/tongyi-deepresearch-30b-a3b:free. Waiting 5.9s before trying next model/round.

@@ -9,9 +9,9 @@ from app.utils.number_parsing import parse_inr_number
 import warnings
 from langchain.tools import tool
 import math
-from app.llm.ollama_llm import OllamaLLM
+from app.llm.gemini_llm import GeminiLLM
 
-llm = OllamaLLM(model="llama3.1:8b")
+llm = GeminiLLM()
 
 # Defer heavy optional imports (pdfplumber, pdf2image, pytesseract) to runtime
 # inside the methods that need them. This avoids import-time failures in

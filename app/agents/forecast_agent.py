@@ -16,9 +16,7 @@ from langchain.prompts import PromptTemplate
 from langchain.schema import AgentAction
 from app.tools.financial_extractor_tool import FinancialDataExtractorTool
 from app.tools.qualitative_analysis_tool import QualitativeAnalysisTool
-from app.llm.ollama_llm import OllamaLLM
-
-llm = OllamaLLM(model="llama3.1:8b")
+from app.llm.gemini_llm import GeminiLLM
 
 import nest_asyncio
 nest_asyncio.apply()
@@ -41,6 +39,8 @@ warnings.filterwarnings("ignore", category=UserWarning, module="camelot")
 load_dotenv()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+llm = GeminiLLM()
 
 # ---------------------------------------------------------------------
 # JSON Schema for final forecast
@@ -172,7 +172,8 @@ class ForecastAgent:
 
             try:
                 # Run the LangChain agent (offloaded to thread to avoid blocking event loop)
-                forecast = await asyncio.to_thread(self.agent.run, dummy_text)
+                raw_forecast = await asyncio.to_thread(self.agent.run, dummy_text)
+
             except Exception as e:
                 # Handle LangChain ReAct parsing errors gracefully
                 if "Parsing LLM output produced both" in str(e) or "OutputParserException" in str(e):
@@ -180,11 +181,19 @@ class ForecastAgent:
                     import re
                     match = re.search(r"Final Answer:\s*(.*)", str(e), re.DOTALL)
                     if match:
-                        forecast = match.group(1).strip()
+                        raw_forecast = match.group(1).strip()
                     else:
-                        forecast = "ForecastAgent encountered mixed ReAct output; recovered partial result."
+                        raw_forecast = "ForecastAgent encountered mixed ReAct output; recovered partial result."
                 else:
                     raise
+
+            forecast = (
+                raw_forecast.replace("\\n", "\n")
+                .replace("**", "")
+                .replace("*", "")
+                .replace("For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE", "")
+            )
+            forecast = re.sub(r"http\S+|[*_#`>\\-]+", "", forecast).strip()
 
             return {
                 "status": "ok",

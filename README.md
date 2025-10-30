@@ -1,11 +1,11 @@
 # TCS Financial Forecasting Agent
 
-An AI-powered financial analysis agent that generates business outlook forecasts for Tata Consultancy Services (TCS) using Ollama (llama2-3b), LangChain, FastAPI, and advanced document processing techniques. The agent runs completely locally using Ollama's implementation of Llama 2 3B model, making it efficient and private.
+An AI-powered financial analysis agent that generates business outlook forecasts for Tata Consultancy Services (TCS) using a hosted Gemini model, LangChain, FastAPI, and advanced document processing techniques. The agent uses Google's Generative Language API (Gemini) for LLM inference. Follow the configuration steps below to obtain an API key and wire it into the application.
 
 ## 📋 Table of Contents
 
 - [Project Overview](#project-overview)
-- [Agent & Tool Design](#agent--tool-design)
+- [Agent &amp; Tool Design](#agent--tool-design)
 - [Prerequisites](#prerequisites)
 - [Detailed Setup Guide](#detailed-setup-guide)
 - [Installation](#installation)
@@ -19,7 +19,7 @@ An AI-powered financial analysis agent that generates business outlook forecasts
 ## Architectural Approach
 
 ```
-[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Ollama)] → [MySQL]
+[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Gemini via Google Generative API)] → [MySQL]
 ```
 
 - **FastAPI Layer**: Handles HTTP requests, input validation, and response formatting
@@ -30,22 +30,23 @@ An AI-powered financial analysis agent that generates business outlook forecasts
 
 ## Design Choices
 
-1. **Local LLM Processing**:
-   - Using Ollama with llama2-3b for complete data privacy
-   - Local processing eliminates API costs and latency
-   - Suitable for sensitive financial analysis
+1. **Hosted LLM Processing (Gemini)**:
 
+   - Using Gemini via Google's Generative Language API for high-quality LLM responses
+   - Requires an API key (create at https://aistudio.google.com/api-keys) and configuration in `.env`
+   - Easier to scale and keep up-to-date with model improvements
 2. **Modular Tool Design**:
+
    - Each tool is self-contained with clear responsibilities
    - Easy to extend or modify individual components
    - Tools can be tested and debugged independently
-
 3. **Async Processing**:
+
    - FastAPI's async support for handling multiple requests
    - Non-blocking database operations
    - Efficient document processing pipeline
-
 4. **Data Persistence**:
+
    - MySQL for structured data storage
    - Audit trail of all analyses
    - Easy retrieval of historical forecasts
@@ -55,6 +56,7 @@ An AI-powered financial analysis agent that generates business outlook forecasts
 ## 1. Master Agent Prompt
 
 The agent uses this core prompt template:
+
 ```text
 You are a financial analysis expert tasked with creating a forecast for TCS.
 Your goal is to provide a well-reasoned forecast based on available data.
@@ -79,6 +81,7 @@ Constraints:
 ## 2. Tool Specifications
 
 ### FinancialDataExtractorTool
+
 - **Purpose**: Extract key financial metrics from PDF reports
 - **Capabilities**:
   - Parse structured financial tables
@@ -86,6 +89,7 @@ Constraints:
   - Handle different PDF formats
 
 ### QualitativeAnalysisTool
+
 - **Purpose**: Analyze textual content from earnings calls
 - **Capabilities**:
   - Semantic search across transcripts
@@ -95,16 +99,17 @@ Constraints:
 ## 3. Agent Chain Flow
 
 1. **Input Processing**:
+
    - Validate user parameters
    - Initialize agent with tools
    - Set up execution context
-
 2. **Document Gathering**:
+
    - Fetch financial reports
    - Fetch earnings transcripts
    - Validate document integrity
-
 3. **Analysis Chain**:
+
    - Extract financial metrics
    - Analyze trends
    - Process qualitative insights
@@ -113,14 +118,15 @@ Constraints:
 ## 4. Error Handling & Retries
 
 - **Document Fetching**:
+
   - Retry failed downloads (max 3 attempts)
   - Fall back to cached copies if available
-  
 - **Metric Extraction**:
+
   - Multiple parsing strategies
   - Confidence scoring for extracted values
-  
 - **LLM Interactions**:
+
   - Temperature adjustment for more focused output
   - Output validation with JSON schema
   - Automatic retry with adjusted prompts
@@ -138,10 +144,11 @@ Constraints:
 ### 1. Installing MySQL
 
 1. Download MySQL Installer:
+
    - Go to [MySQL Downloads](https://dev.mysql.com/downloads/installer/)
    - Download "Windows (x86, 32-bit), MSI Installer"
-
 2. Install MySQL:
+
    - Run the downloaded installer
    - Choose "Custom" installation
    - Select:
@@ -151,13 +158,13 @@ Constraints:
    - Choose "Standalone MySQL Server"
    - Set root password: `ankurwavey` (or your choice)
    - Keep other default settings
-
 3. Verify MySQL Installation:
+
    - Open Command Prompt
    - Run: `mysql --version`
    - Should show MySQL 8.0.x
-
 4. Create Database:
+
    - Open MySQL Workbench
    - Connect to localhost (user: root, password: your_password)
    - Run this SQL:
@@ -165,35 +172,34 @@ Constraints:
      CREATE DATABASE tcs_forecast;
      ```
 
-### 2. Installing Ollama
+### 2. Configuring Gemini (Google Generative API)
 
-1. Download Ollama:
-   - Go to [Ollama.ai](https://ollama.ai/download)
-   - Download Windows version
+1. Create an API Key:
 
-2. Install Ollama:
-   - Run the downloaded installer
-   - Follow installation wizard
-   - Restart your computer after installation
+   - Go to https://aistudio.google.com/api-keys and create an API key for the Generative Language API.
+2. Add the API key to your `.env` file:
 
-3. Pull Llama Model:
-   - Open Command Prompt
-   - Run: `ollama pull llama2:3b`
-   - Wait for download to complete
-   - Verify with: `ollama list`
+   - Open the project's `.env` file and add the following entry (replace with your key):
 
-4. Start Ollama Service:
-   - Open new Command Prompt
-   - Run: `ollama serve`
-   - Keep this window open
+     GEMINI_API=YOUR_GEMINI_API_KEY
+   - Also ensure the `BASE_URL` and `GEMINI_MODEL` variables are present. Example:
+
+     BASE_URL=https://generativelanguage.googleapis.com/v1beta/
+     GEMINI_MODEL=models/gemma-3-27b-it
+   - The app expects `GEMINI_API` to contain the API key used to authenticate requests to the Generative Language API.
+3. Notes on usage:
+
+   - This project provides an integration module at `app/llm/gemini_llm.py` which uses the configured `BASE_URL`, `GEMINI_MODEL`, and `GEMINI_API` to call Gemini.
+   - Keep your API key secret. Do not commit real keys to public repositories.
 
 ### 3. Python Setup
 
 1. Install Python:
+
    - Download Python 3.10+ from [python.org](https://www.python.org/downloads/)
    - Check "Add Python to PATH" during installation
-
 2. Verify Python:
+
    - Open new Command Prompt
    - Run: `python --version`
    - Should show Python 3.10.x or higher
@@ -201,18 +207,19 @@ Constraints:
 ## Installation
 
 1. Clone the repository:
+
    ```cmd
    git clone https://github.com/ankurkrr/Data-Analysis-AI-Agents.git
    cd Data-Analysis-AI-Agents
    ```
-
 2. Create virtual environment:
+
    ```cmd
    python -m venv venv
    venv\Scripts\activate
    ```
-
 3. Install dependencies:
+
    ```cmd
    pip install -r requirements.txt
    ```
@@ -225,8 +232,21 @@ Constraints:
      MYSQL_HOST=localhost
      MYSQL_PORT=3306
      MYSQL_USER=root
-     MYSQL_PASSWORD=ankurwavey
+     MYSQL_PASSWORD=
      MYSQL_DB=tcs_forecast
+     API_HOST=0.0.0.0
+     API_PORT=8082
+
+
+     GEMINI_API_KEY=
+     BASE_URL=https://generativelanguage.googleapis.com/v1beta/
+     GEMINI_MODEL=models/gemma-3-27b-it
+
+     # Embeddings
+     EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+     # Tesseract (if using OCR)
+     TESSERACT_CMD=/usr/bin/tesseract
      API_HOST=0.0.0.0
      API_PORT=8082
      ```
@@ -236,15 +256,24 @@ Constraints:
 ### 1. Ensure Services are Running
 
 1. Check MySQL is running:
+
    - Open Services (Win + R, type 'services.msc')
    - Find "MySQL80"
    - Status should be "Running"
    - If not, right-click → Start
+2. Start the Application (no local Ollama required):
+3. Open new Command Prompt
+4. Navigate to project directory
+5. Activate virtual environment:
 
-2. Start Ollama:
-   - Open Command Prompt as Administrator
-   - Run: `ollama serve`
-   - Keep this window open
+   ```cmd
+   venv\Scripts\activate
+   ```
+6. Start FastAPI server:
+
+   ```cmd
+   uvicorn app.main:app --host 0.0.0.0 --port 8082 --reload
+   ```
 
 ### 2. Start the Application
 
@@ -274,16 +303,18 @@ Constraints:
 ### Troubleshooting
 
 1. MySQL Connection Issues:
+
    - Verify MySQL is running
    - Check password in `.env`
    - Try connecting with MySQL Workbench
+2. Gemini / API Issues:
 
-2. Ollama Issues:
-   - Ensure `ollama serve` is running
-   - Check `ollama list` shows llama2:3b
-   - Restart Ollama service if needed
-
+   - Ensure `GEMINI_API` is set in `.env` and is valid
+   - Verify `BASE_URL` and `GEMINI_MODEL` are set correctly in `.env`
+   - Check that your network permits outbound calls to the Generative Language API endpoint
+   - Look for API errors in the server logs (invalid key, rate limits, or permission issues)
 3. API Issues:
+
    - Check all environment variables
    - Look for errors in terminal
    - Verify port 8082 is free
@@ -300,7 +331,7 @@ app/
 │   ├── financial_extractor_tool.py
 │   └── qualitative_analysis_tool.py
 ├── llm/
-│   └── ollama_llm.py      # Ollama integration
+│   └── gemini_llm.py      # Gemini (Google Generative Language API) integration
 ├── db/
 │   └── mysql_client.py     # Database operations
 ├── utils/
@@ -312,12 +343,15 @@ app/
 ## API Usage
 
 ### GET /health
+
 Health check endpoint to verify service status
 
 ### POST /api/forecast
+
 Generate a forecast based on recent financial documents
 
 Request body:
+
 ```json
 {
     "quarters": 3,
@@ -326,6 +360,7 @@ Request body:
 ```
 
 Response:
+
 ```json
 {
     "forecast": {

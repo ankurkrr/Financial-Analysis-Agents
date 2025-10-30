@@ -28,3 +28,4 @@ pandas
 pytest
 httpx
 playwright
+google-generativeai

@@ -19,13 +19,13 @@ An AI-powered financial analysis agent that generates business outlook forecasts
 ## Architectural Approach
 
 ```
-[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Gemini via Google Generative API)] → [MySQL]
+[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Gemini hosted)] → [MySQL]
 ```
 
 - **FastAPI Layer**: Handles HTTP requests, input validation, and response formatting
 - **Agent Coordinator**: Orchestrates the analysis workflow and tool selection
 - **Tool Chain**: Specialized tools for different analysis aspects
-- **LLM Layer**: Local Ollama instance running llama2-3b
+- **LLM Layer**: Primary integration with Google's Gemini (Generative Language API). The project also includes an optional local LLM adapter using Ollama for on-prem or offline usage (see `app/llm/gemini_llm.py` and `app/llm/ollama_llm.py`).
 - **Storage Layer**: MySQL for persistent storage and audit trails
 
 ## Design Choices
@@ -156,7 +156,7 @@ Constraints:
      - MySQL Workbench
    - Click "Next" and "Execute"
    - Choose "Standalone MySQL Server"
-   - Set root password: `ankurwavey` (or your choice)
+   - Set root password:  (or your choice)
    - Keep other default settings
 3. Verify MySQL Installation:
 
@@ -181,12 +181,12 @@ Constraints:
 
    - Open the project's `.env` file and add the following entry (replace with your key):
 
-     GEMINI_API=YOUR_GEMINI_API_KEY
+     GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    - Also ensure the `BASE_URL` and `GEMINI_MODEL` variables are present. Example:
 
      BASE_URL=https://generativelanguage.googleapis.com/v1beta/
      GEMINI_MODEL=models/gemma-3-27b-it
-   - The app expects `GEMINI_API` to contain the API key used to authenticate requests to the Generative Language API.
+   - The app expects `GEMINI_API_KEY` to contain the API key used to authenticate requests to the Generative Language API. If you want to run a local model instead, you can configure the Ollama adapter (see `app/llm/ollama_llm.py`).
 3. Notes on usage:
 
    - This project provides an integration module at `app/llm/gemini_llm.py` which uses the configured `BASE_URL`, `GEMINI_MODEL`, and `GEMINI_API` to call Gemini.
@@ -209,8 +209,7 @@ Constraints:
 1. Clone the repository:
 
    ```cmd
-   git clone https://github.com/ankurkrr/Data-Analysis-AI-Agents.git
-   cd Data-Analysis-AI-Agents
+   git clone https://github.com/ankurkrr/Financial-Analysis-Agents.git
    ```
 2. Create virtual environment:
 
@@ -227,6 +226,7 @@ Constraints:
 ## Configuration
 
 1. Setup environment variables:
+
    - Create or edit `.env` file:
      ```
      MYSQL_HOST=localhost
@@ -234,22 +234,38 @@ Constraints:
      MYSQL_USER=root
      MYSQL_PASSWORD=
      MYSQL_DB=tcs_forecast
+     MYSQL_URL=mysql+pymysql://root:password@localhost:3306/forecast_db
      API_HOST=0.0.0.0
      API_PORT=8082
 
-
      GEMINI_API_KEY=
+
      BASE_URL=https://generativelanguage.googleapis.com/v1beta/
      GEMINI_MODEL=models/gemma-3-27b-it
 
-     # Embeddings
      EMBEDDING_MODEL=all-MiniLM-L6-v2
 
-     # Tesseract (if using OCR)
      TESSERACT_CMD=/usr/bin/tesseract
-     API_HOST=0.0.0.0
-     API_PORT=8082
      ```
+
+   GEMINI_API_KEY=
+   BASE_URL=https://generativelanguage.googleapis.com/v1beta/
+   GEMINI_MODEL=models/gemma-3-27b-it
+
+   # Embeddings
+
+   EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+   # Tesseract (if using OCR)
+
+   TESSERACT_CMD=/usr/bin/tesseract
+   API_HOST=0.0.0.0
+   API_PORT=8082
+
+
+   ```
+
+   ```
 
 ## Running the Application
 
@@ -293,7 +309,11 @@ Constraints:
 1. Open browser: http://localhost:8082/docs
 2. Check health endpoint: http://localhost:8082/health
 3. Test forecast endpoint with sample request:
+   POST http://localhost:8082/health
    ```json
+   header key:content-type, value:application/json
+
+   raw-json
    {
        "quarters": 3,
        "sources": ["screener", "company-ir"]
@@ -331,7 +351,7 @@ app/
 │   ├── financial_extractor_tool.py
 │   └── qualitative_analysis_tool.py
 ├── llm/
-│   └── gemini_llm.py      # Gemini (Google Generative Language API) integration
+│   ├── gemini_llm.py       # Gemini (Google Generative Language API) integration
 ├── db/
 │   └── mysql_client.py     # Database operations
 ├── utils/

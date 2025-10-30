@@ -10,6 +10,8 @@
    - Built-in retry logic and rate limit handling
    - Model: `gemma-3-27b-it`
 
+   - Local LLM option: the repository also includes a local Ollama adapter at `app/llm/ollama_llm.py` which can be used as an on-prem or offline fallback. The LLM adapter is pluggable — switch between Gemini and Ollama via configuration/env vars (for example, set a runtime flag or choose the LLM adapter in your app bootstrap).
+
 2. **RAG (Retrieval-Augmented Generation) Pipeline**
    - Embeddings: `all-MiniLM-L6-v2` for document understanding
    - Document processing:

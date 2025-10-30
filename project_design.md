@@ -7,13 +7,13 @@ This TCS Financial Forecasting Agent is built with a modular, event-driven archi
 ### 1. Architectural Approach
 
 ```
-[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Ollama)] → [MySQL]
+[FastAPI Server] → [Agent Coordinator] → [Tool Chain] → [LLM (Gemini hosted / Ollama local)] → [MySQL]
 ```
 
 - **FastAPI Layer**: Handles HTTP requests, input validation, and response formatting
 - **Agent Coordinator**: Orchestrates the analysis workflow and tool selection
 - **Tool Chain**: Specialized tools for different analysis aspects
-- **LLM Layer**: Local Ollama instance running llama2-3b
+- **LLM Layer**: The project supports both a hosted Gemini integration and a local Ollama adapter. Both adapters live under `app/llm/` (`gemini_llm.py` and `ollama_llm.py`) and can be selected via configuration depending on deployment needs.
 - **Storage Layer**: MySQL for persistent storage and audit trails
 
 ### 2. Design Choices

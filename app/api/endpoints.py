@@ -1,166 +1,136 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from uuid import uuid4
-from typing import Optional
+from typing import Optional, List
 import logging
-import json
 import asyncio
-import requests
-from fastapi import APIRouter, Request
-from app.agents.forecast_agent import ForecastAgent
+import json
 
 from app.agents.forecast_agent import ForecastAgent
 from app.db.mysql_client import MySQLClient
 
 router = APIRouter()
-# Lazy-initialized services to avoid import-time errors (e.g. DB down)
+
+# Lazy-initialized global instances
 agent: Optional[ForecastAgent] = None
 db: Optional[MySQLClient] = None
 
 
 def ensure_services():
-    """Initialize agent and DB lazily. Raises HTTPException on failure."""
+    """Initialize ForecastAgent and MySQLClient once (lazy init)."""
     global agent, db
     if agent is None:
         try:
             agent = ForecastAgent()
+            logging.info("✅ ForecastAgent initialized.")
         except Exception as e:
-            logging.exception("Failed to initialize ForecastAgent")
-            raise HTTPException(status_code=500, detail=f"ForecastAgent initialization failed: {e}")
+            logging.exception("❌ Failed to initialize ForecastAgent")
+            raise HTTPException(status_code=500, detail=f"ForecastAgent init failed: {e}")
 
     if db is None:
         try:
             db = MySQLClient()
+            logging.info("✅ MySQLClient initialized and connected.")
         except Exception as e:
-            logging.exception("Failed to initialize MySQLClient")
-            raise HTTPException(status_code=500, detail=f"MySQLClient initialization failed: {e}")
+            logging.exception("❌ Failed to initialize MySQLClient")
+            raise HTTPException(status_code=500, detail=f"MySQLClient init failed: {e}")
+
 
 class ForecastRequest(BaseModel):
+    ticker: str = "TCS"
     quarters: int = 3
-    sources: list = ["screener", "company-ir"]
+    sources: List[str] = ["screener", "company-ir"]
     include_market: bool = False
 
+
 @router.post("/forecast/tcs")
-async def forecast_tcs(request: Request):  # 👈 FIX: add request param
+async def forecast_tcs(request: Request, req: ForecastRequest):
     """
-    Endpoint that runs the ForecastAgent for TCS
+    Main endpoint for running the TCS ForecastAgent.
+    - Logs request to MySQL
+    - Runs the forecasting pipeline
+    - Logs result to MySQL
     """
+    ensure_services()
+
+    # Generate unique request ID
+    request_id = request.headers.get("X-Request-ID", str(uuid4()))
+    payload = req.dict()
+    ticker = payload.get("ticker", "TCS")
+
+    # Log the incoming request
     try:
-        data = await request.json()
-        ticker = data.get("ticker", "TCS")
-        request_id = request.headers.get("X-Request-ID", "auto-generated-id")
-
-        agent = ForecastAgent()
-        result = agent.run(ticker=ticker, request_id=request_id)
-        return result
-
+        db.log_request(request_id, payload)
+        logging.info(f"🟢 Logged request {request_id} for ticker={ticker}")
     except Exception as e:
-        return {"detail": f"ForecastAgent error: {str(e)}"}
+        logging.warning(f"⚠️ Failed to log request {request_id}: {e}")
 
+    # Run ForecastAgent safely
     try:
-        return await asyncio.wait_for(agent.run(request.ticker), timeout=60)
-    except asyncio.TimeoutError:
-        raise HTTPException(status_code=504, detail="Forecast request timed out (60s).")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"ForecastAgent error: {e}")
+        logging.info(f"🚀 Running ForecastAgent for {ticker} ({request_id})")
+        result = agent.run(
+            ticker=ticker,
+            request_id=request_id,
+            quarters=req.quarters,
+            sources=req.sources,
+            include_market=req.include_market
+        )
 
-    try:
-        result = agent.run(ticker="TCS", request_id=request_id, quarters=req.quarters, sources=req.sources, include_market=req.include_market)
+        # Log result to DB
         try:
             db.log_result(request_id, result)
-        except Exception:
-            logging.exception("Failed to log result to DB")
-        else:
-            # If the result indicates a synthetic/fallback LLM, record an event and emit structured log
-            try:
-                meta = result.get("metadata", {}) if isinstance(result, dict) else {}
-                llm_mode = meta.get("llm_mode")
-                llm_fake = bool(meta.get("llm_fake", False))
-                if llm_mode and llm_mode != "real":
-                    # Store an llm_events row for monitoring
-                    try:
-                        db.log_event(request_id, "llm_fallback", {"mode": llm_mode, "llm_fake": llm_fake})
-                    except Exception:
-                        logging.exception("Failed to write llm_events row")
+            logging.info(f"💾 Logged result for {request_id}")
+        except Exception as e:
+            logging.warning(f"⚠️ Failed to log result for {request_id}: {e}")
 
-                    # Emit a structured JSON log for ingestion
-                    try:
-                        structured = {
-                            "event": "llm_fallback",
-                            "request_id": request_id,
-                            "llm_mode": llm_mode,
-                            "llm_fake": llm_fake
-                        }
-                        logging.warning(json.dumps(structured))
-                    except Exception:
-                        logging.exception("Failed to emit structured fallback log")
-            except Exception:
-                # non-fatal: don't block returning the result
-                logging.exception("Error while recording llm fallback event")
         return result
-    except HTTPException:
-        raise
+
+    except asyncio.TimeoutError:
+        db.log_event(request_id, "timeout", {"error": f"ForecastAgent exceeded timeout for {ticker}"})
+        raise HTTPException(status_code=504, detail=f"ForecastAgent timed out for {ticker}")
     except Exception as e:
-        logging.exception("Agent run failed")
-        raise HTTPException(status_code=500, detail=str(e))
+        db.log_event(request_id, "agent_error", {"error": str(e)})
+        logging.exception("❌ ForecastAgent error")
+        raise HTTPException(status_code=500, detail=f"ForecastAgent error: {e}")
+
 
 @router.get("/status/{request_id}")
-async def status(request_id: str):
+async def get_status(request_id: str):
+    """Retrieve the last stored forecast result for a given request_id."""
     ensure_services()
     try:
-        return db.get_result(request_id)
+        result = db.get_result(request_id)
+        if result:
+            return result
+        raise HTTPException(status_code=404, detail="Request ID not found in database.")
     except Exception:
-        logging.exception("Failed to fetch result from DB")
-        raise HTTPException(status_code=500, detail="Failed to fetch result")
+        logging.exception("❌ Failed to fetch result from MySQL.")
+        raise HTTPException(status_code=500, detail="Failed to fetch result from DB.")
 
 
 @router.get("/health/capabilities")
-async def capabilities():
-    """Return runtime capabilities and configured LLM/embedder modes.
-
-    This endpoint is safe to call and will not raise on missing optional
-    dependencies; it returns booleans indicating availability and whether
-    fake modes are enabled.
-    """
+async def health_check():
+    """Returns runtime capability diagnostics for debugging."""
+    import importlib.util
     import os
 
-    import importlib.util
-
-    def _check_import(name: str) -> bool:
-        """Check whether a package is importable without importing it.
-
-        Uses importlib.util.find_spec which avoids executing package top-level
-        code (safer for heavy native packages in CI/test environments).
-        """
+    def _has_pkg(name: str) -> bool:
         try:
             return importlib.util.find_spec(name) is not None
         except Exception:
             return False
 
-    llm_forced_fake = bool(os.getenv("FORCE_FAKE_LLM"))
-    llm_auto_fake = bool(os.getenv("ALLOW_AUTO_FAKE"))
-    embedder_forced_fake = bool(os.getenv("FORCE_FAKE_EMBEDDER"))
-
-    caps = {
+    return {
         "llm": {
-            "forced_fake": llm_forced_fake,
-            "allow_auto_fake": llm_auto_fake,
-            # indicates whether fake outputs are possible given current env
-            "fake_output_possible": llm_forced_fake or llm_auto_fake
-        },
-        "embedder": {
-            "forced_fake": embedder_forced_fake,
-            "sentence_transformers_available": _check_import("sentence_transformers"),
-            "faiss_available": _check_import("faiss")
-        },
-        "pdf_tools": {
-            "camelot_available": _check_import("camelot"),
-            "pdfplumber_available": _check_import("pdfplumber"),
-            "pytesseract_available": _check_import("pytesseract")
+            "gemini_api_key_set": bool(os.getenv("GEMINI_API_KEY")),
         },
         "db": {
-            "mysql_connector_installed": _check_import("mysql.connector")
+            "mysql_host": os.getenv("MYSQL_HOST", "localhost"),
+            "connected": db is not None,
+        },
+        "pdf_tools": {
+            "camelot": _has_pkg("camelot"),
+            "pdfplumber": _has_pkg("pdfplumber"),
+            "pytesseract": _has_pkg("pytesseract"),
         }
     }
-
-    return caps

@@ -3,6 +3,9 @@ from app.api.endpoints import router as api_router
 from dotenv import load_dotenv
 import os
 import nest_asyncio
+from app.db.mysql_client import MySQLClient
+
+mysql_client = MySQLClient() 
 
 
 load_dotenv()  # load .env file at runtime
@@ -20,3 +23,9 @@ app.include_router(api_router, prefix="/api")
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+@app.on_event("startup")
+async def startup_event():
+    print("✅ MySQL connected and initialized.")
+
+app.include_router(api_router, prefix="/api")

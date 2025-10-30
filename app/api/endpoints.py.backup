@@ -1,0 +1,170 @@
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from uuid import uuid4
+from typing import Optional
+import logging
+import json
+import asyncio
+import requests
+from fastapi import APIRouter, Request
+from app.agents.forecast_agent import ForecastAgent
+
+from app.agents.forecast_agent import ForecastAgent
+from app.db.mysql_client import MySQLClient
+
+router = APIRouter()
+# Lazy-initialized services to avoid import-time errors (e.g. DB down)
+agent: Optional[ForecastAgent] = None
+db: Optional[MySQLClient] = None
+
+
+def ensure_services():
+    """Initialize agent and DB lazily. Raises HTTPException on failure."""
+    global agent, db
+    if agent is None:
+        try:
+            agent = ForecastAgent()
+            logging.info("✅ ForecastAgent initialized")
+        except Exception as e:
+            logging.exception("Failed to initialize ForecastAgent")
+            raise HTTPException(status_code=500, detail=f"ForecastAgent initialization failed: {e}")
+
+    if db is None:
+        try:
+            db = MySQLClient()
+            logging.info("✅ MySQLClient connected")
+        except Exception as e:
+            logging.exception("Failed to initialize MySQLClient")
+            raise HTTPException(status_code=500, detail=f"MySQLClient initialization failed: {e}")
+
+class ForecastRequest(BaseModel):
+    quarters: int = 3
+    sources: list = ["screener", "company-ir"]
+    include_market: bool = False
+
+@router.post("/forecast/tcs")
+async def forecast_tcs(request: Request):  # 👈 FIX: add request param
+    """
+    Endpoint that runs the ForecastAgent for TCS
+    """
+    ensure_services()
+    
+    try:
+        data = await request.json()
+        ticker = data.get("ticker", "TCS")
+        request_id = request.headers.get("X-Request-ID", "auto-generated-id")
+
+        agent = ForecastAgent()
+        result = agent.run(ticker=ticker, request_id=request_id)
+        return result
+
+    except Exception as e:
+        return {"detail": f"ForecastAgent error: {str(e)}"}
+
+    try:
+        return await asyncio.wait_for(agent.run(request.ticker), timeout=60)
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Forecast request timed out (60s).")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"ForecastAgent error: {e}")
+
+    try:
+        result = agent.run(ticker="TCS", request_id=request_id, quarters=req.quarters, sources=req.sources, include_market=req.include_market)
+        try:
+            db.log_result(request_id, result)
+        except Exception:
+            logging.exception("Failed to log result to DB")
+        else:
+            # If the result indicates a synthetic/fallback LLM, record an event and emit structured log
+            try:
+                meta = result.get("metadata", {}) if isinstance(result, dict) else {}
+                llm_mode = meta.get("llm_mode")
+                llm_fake = bool(meta.get("llm_fake", False))
+                if llm_mode and llm_mode != "real":
+                    # Store an llm_events row for monitoring
+                    try:
+                        db.log_event(request_id, "llm_fallback", {"mode": llm_mode, "llm_fake": llm_fake})
+                    except Exception:
+                        logging.exception("Failed to write llm_events row")
+
+                    # Emit a structured JSON log for ingestion
+                    try:
+                        structured = {
+                            "event": "llm_fallback",
+                            "request_id": request_id,
+                            "llm_mode": llm_mode,
+                            "llm_fake": llm_fake
+                        }
+                        logging.warning(json.dumps(structured))
+                    except Exception:
+                        logging.exception("Failed to emit structured fallback log")
+            except Exception:
+                # non-fatal: don't block returning the result
+                logging.exception("Error while recording llm fallback event")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.exception("Agent run failed")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/status/{request_id}")
+async def status(request_id: str):
+    ensure_services()
+    try:
+        return db.get_result(request_id)
+    except Exception:
+        logging.exception("Failed to fetch result from DB")
+        raise HTTPException(status_code=500, detail="Failed to fetch result")
+
+
+@router.get("/health/capabilities")
+async def capabilities():
+    """Return runtime capabilities and configured LLM/embedder modes.
+
+    This endpoint is safe to call and will not raise on missing optional
+    dependencies; it returns booleans indicating availability and whether
+    fake modes are enabled.
+    """
+    import os
+
+    import importlib.util
+
+    def _check_import(name: str) -> bool:
+        """Check whether a package is importable without importing it.
+
+        Uses importlib.util.find_spec which avoids executing package top-level
+        code (safer for heavy native packages in CI/test environments).
+        """
+        try:
+            return importlib.util.find_spec(name) is not None
+        except Exception:
+            return False
+
+    llm_forced_fake = bool(os.getenv("FORCE_FAKE_LLM"))
+    llm_auto_fake = bool(os.getenv("ALLOW_AUTO_FAKE"))
+    embedder_forced_fake = bool(os.getenv("FORCE_FAKE_EMBEDDER"))
+
+    caps = {
+        "llm": {
+            "forced_fake": llm_forced_fake,
+            "allow_auto_fake": llm_auto_fake,
+            # indicates whether fake outputs are possible given current env
+            "fake_output_possible": llm_forced_fake or llm_auto_fake
+        },
+        "embedder": {
+            "forced_fake": embedder_forced_fake,
+            "sentence_transformers_available": _check_import("sentence_transformers"),
+            "faiss_available": _check_import("faiss")
+        },
+        "pdf_tools": {
+            "camelot_available": _check_import("camelot"),
+            "pdfplumber_available": _check_import("pdfplumber"),
+            "pytesseract_available": _check_import("pytesseract")
+        },
+        "db": {
+            "mysql_connector_installed": _check_import("mysql.connector")
+        }
+    }
+
+    return caps
